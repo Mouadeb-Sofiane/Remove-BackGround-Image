@@ -3,12 +3,10 @@
     <h2>Ajouter une image</h2>
     <input type="file" @change="onFileSelect" accept="image/*" class="file-input" />
     
-    <!-- Erreur si quelque chose ne va pas -->
     <div v-if="errorMessage" class="error-message">
       <p>{{ errorMessage }}</p>
     </div>
 
-    <!-- Prévisualisation des images -->
     <div v-if="originalImageUrl" class="image-preview">
       <div>
         <p>Image originale :</p>
@@ -20,12 +18,10 @@
       </div>
     </div>
 
-    <!-- Bouton pour supprimer l'arrière-plan -->
     <button @click="removeBackground" :disabled="!originalImageUrl" class="convert-btn">
       Supprimer l'arrière-plan
     </button>
 
-    <!-- Bouton de téléchargement après traitement -->
     <button 
       v-if="processedImageUrl" 
       @click="downloadImage" 
@@ -33,7 +29,6 @@
       Télécharger l'image sans fond
     </button>
 
-    <!-- Indicateur de chargement -->
     <div v-if="isLoading" class="loading-spinner">
       <div class="spinner"></div>
       <p>Chargement...</p>
@@ -47,11 +42,11 @@ import axios from "axios";
 export default {
   data() {
     return {
-      originalImageUrl: null,  // Stocke l'image sélectionnée
-      selectedFile: null,      // Stocke le fichier sélectionné
-      processedImageUrl: null, // Stocke l'image sans fond
-      isLoading: false,        // Indicateur de chargement
-      errorMessage: null,      // Message d'erreur si quelque chose se passe mal
+      originalImageUrl: null,  
+      selectedFile: null,      
+      processedImageUrl: null, 
+      isLoading: false,        
+      errorMessage: null,      
     };
   },
   methods: {
@@ -61,8 +56,8 @@ export default {
       
       this.selectedFile = file;
       this.originalImageUrl = URL.createObjectURL(file);
-      this.processedImageUrl = null; // Réinitialise l'image traitée
-      this.errorMessage = null;  // Réinitialise le message d'erreur
+      this.processedImageUrl = null; 
+      this.errorMessage = null; 
     },
     
     async removeBackground() {
@@ -71,33 +66,31 @@ export default {
         return;
       }
 
-      this.isLoading = true;  // Afficher l'indicateur de chargement
+      this.isLoading = true;  
 
       const formData = new FormData();
       formData.append("file", this.selectedFile);
 
       try {
-        // Appel API pour traiter l'image
         const response = await axios.post("http://localhost:8000/remove-bg/", formData, {
           responseType: "blob",
         });
 
         this.processedImageUrl = URL.createObjectURL(response.data);
-        this.errorMessage = null; // Réinitialise l'erreur
+        this.errorMessage = null; 
       } catch (error) {
         console.error("Erreur de traitement :", error);
         this.errorMessage = "Une erreur est survenue lors de la suppression de l'arrière-plan.";
       } finally {
-        this.isLoading = false;  // Masquer l'indicateur de chargement
+        this.isLoading = false;  
       }
     },
 
-    // Méthode pour télécharger l'image sans fond
     downloadImage() {
       if (this.processedImageUrl) {
         const a = document.createElement("a");
         a.href = this.processedImageUrl;
-        a.download = "image_sans_fond.png";  // Nom du fichier de téléchargement
+        a.download = "image_sans_fond.png";  
         a.click();
       }
     }

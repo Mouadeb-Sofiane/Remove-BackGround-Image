@@ -1,2 +1,0 @@
-On va essayer de faire une IA qui supprime l'arrière plan d'une image tout 
-en conservant sa qualité donc une meilleure app que RemoveBg. 
